@@ -1,11 +1,22 @@
-import { X } from 'lucide-react'
-import { InputLabel, MenuItem, Select } from '@mui/material'
+import { X, Home, ShoppingCart, Car, Utensils, Film, Heart, BookOpen, Zap, MoreHorizontal } from 'lucide-react';
+import { InputLabel, MenuItem, Select, FormControl, TextField } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/slices/toggleSlice';
+import { useState } from 'react';
 
 function CreateTransaction() {
     const transactionType = ['Income', 'Expense'];
-
+    const categories = [
+        { name: "Rent", icon: <Home size={18} /> },
+        { name: "Groceries", icon: <ShoppingCart size={18} /> },
+        { name: "Transport", icon: <Car size={18} /> },
+        { name: "Food", icon: <Utensils size={18} /> },
+        { name: "Entertainment", icon: <Film size={18} /> },
+        { name: "Healthcare", icon: <Heart size={18} /> },
+        { name: "Education", icon: <BookOpen size={18} /> },
+        { name: "Utilities", icon: <Zap size={18} /> },
+        { name: "Other", icon: <MoreHorizontal size={18} /> }
+    ];
     const isActive = useSelector(state => state.toggle.isActive)
 
     const dispatch = useDispatch();
@@ -14,12 +25,23 @@ function CreateTransaction() {
         dispatch(toggle());
     }
 
+    const [type, setType] = useState('');
+
+    const handleChangeType = (event) => {
+        SetType(event.target.value);
+    };
+
+    const [category, setCategory] = useState('');
+
+    const handleChangeCategory = (event) => {
+        setCategory(event.target.value);
+    };
 
     return (
         <div className={`bg-[var(--bg-dark)] fixed z-10 right-full w-full flex justify-end top-0
         menuOpen
         ${isActive ? 'active' : ''}`}>
-            <div className="z-[100] bg-[var(--color-secondary)] w-[40%] h-screen p-4
+            <div className="z-[100] bg-[var(--color-secondary)] w-1/4 h-screen p-4
             flex flex-col gap-6">
                 <div className='flex flex-col'>
                     <p className='text-[var(--color-muted)] flex justify-end'>
@@ -34,22 +56,88 @@ function CreateTransaction() {
                     </div>
                 </div>
                 <div className='flex flex-col gap-4'>
-                    <InputLabel>Transaction Type</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value='qqq'
-                        label="Age"
-                        onChange={handleChange}
-                    >
-                        {
+                    <FormControl fullWidth>
+                        <InputLabel id="transaction-type-label">Transaction Type</InputLabel>
+                        <Select
+                        labelId="transaction-type-label"
+                        value={type}
+                        label="Transaction Type"
+                        onChange={handleChangeType}
+                        >
+                            {
                             transactionType.map((el, index) => {
                                 return (
-                                    <MenuItem selected key={index} value={el}>{el}</MenuItem>
+                                    <MenuItem key={index} 
+                                        value={el}
+                                        sx={{
+                                            '&': {
+                                                border:'2px solid rgba(255, 255, 255, 0)',
+                                                borderRadius: '5px',
+                                                margin:'5px'
+                                            },
+                                            '&:hover': {
+                                                border:'2px solid var(--btn-create-hover)',
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: 'var(--btn-create)',
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: 'var(--btn-create-hover)',
+                                            }
+                                        }}
+                                    >{el}</MenuItem>
                                 )
                             })
-                        }
-                    </Select>
+                            }
+                            </Select>            
+                    </FormControl>
+                    <TextField label="Amount" variant="outlined" />
+                    <FormControl fullWidth>
+                        <InputLabel id="category-label">Category</InputLabel>
+                        <Select
+                        labelId="category-label"
+                        value={category}
+                        label="Category"
+                        onChange={handleChangeCategory}
+                        sx={{
+                            '& .MuiSelect-select': {
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }
+                        }}
+                        >
+                            {
+                            categories.map((el, index) => {
+                                return (
+                                    <MenuItem key={index} 
+                                        value={el.name}
+                                        sx={{
+                                            '&': {
+                                                border:'2px solid rgba(255, 255, 255, 0)',
+                                                borderRadius: '5px',
+                                                margin:'5px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.25rem'
+                                            },
+                                            '&:hover': {
+                                                border:'2px solid var(--btn-create-hover)',
+                                            },
+                                            '&.Mui-selected': {
+                                                backgroundColor: 'var(--btn-create)',
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                backgroundColor: 'var(--btn-create-hover)',
+                                            }
+                                        }}
+                                    >{el.icon} {el.name}</MenuItem>
+                                )
+                            })
+                            }
+                        </Select>            
+                    </FormControl>
+
                 </div>
             </div>
         </div>
