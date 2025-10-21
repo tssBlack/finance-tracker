@@ -1,5 +1,3 @@
-import { icons } from "lucide-react";
-
 function InfoBlock({description, title, icon: IconComponent}) {
 
     const descriptionConfig = {

@@ -1,10 +1,12 @@
-import { TrendingUp, TrendingDown, Plus  } from 'lucide-react'
+import { TrendingUp, Plus  } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/slices/toggleSlice';
+import { selectBalanceTotal } from '../../store/slices/addTransaction/addTransactionSlice';
 
 function Header() {
 
     const isActive = useSelector(state => state.toggle.isActive)
+    const balance = useSelector(selectBalanceTotal)
 
     const dispatch = useDispatch();
 
@@ -35,7 +37,7 @@ function Header() {
             <div className="rounded-xl bg-[image:var(--bg-purple)] p-8 flex justify-between">
                 <div className='flex flex-col gap-4'>
                     <span className="text-[var(--color-invisible)] font-bold">Total Balance</span>
-                    <span className="text-[var(--color-secondary)] font-bold text-6xl">$2,320.00</span>
+                    <span className="text-[var(--color-secondary)] font-bold text-6xl">${balance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                     <span className="text-[var(--color-invisible)]">Great job! Month over month change</span>
                 </div>
                 <div className="rounded-4xl text-[var(--color-secondary)] text-[0.9rem] font-bold bg-[var(--bg-success)] flex gap-0.5 h-fit px-3 py-2 items-center">
