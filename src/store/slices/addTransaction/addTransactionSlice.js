@@ -108,6 +108,43 @@ export const selectTotals = (state) => {
   };
 };
 
+// Returns current month and previous month balances and change percent
+export const selectMonthOverMonth = (state) => {
+  const items = state.transactions.items;
+
+  // Helper to compute balance for a given month
+  const getMonthBalance = (target) => {
+    let income = 0;
+    let expenses = 0;
+    for (const t of items) {
+      const d = dayjs(t.dateISO);
+      if (d.isSame(target, 'month')) {
+        if (t.type === 'Income') income += t.amount;
+        else expenses += t.amount;
+      }
+    }
+    return income - expenses;
+  };
+
+  const currentMonth = dayjs().startOf('month');
+  const previousMonth = currentMonth.subtract(1, 'month');
+
+  const currentBalance = getMonthBalance(currentMonth);
+  const previousBalance = getMonthBalance(previousMonth);
+
+  const delta = currentBalance - previousBalance;
+  const percent = previousBalance === 0
+    ? 0
+    : (delta / Math.abs(previousBalance)) * 100;
+
+  return {
+    currentBalance,
+    previousBalance,
+    delta,
+    percent,
+  };
+};
+
 export const selectSpendingByCategoryData = (state) => {
   const items = state.transactions.items.filter((t) => t.type === "Expense");
   const totalsByCategory = new Map();
