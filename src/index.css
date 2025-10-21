@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #181d25;
+  --color-secondary: #ffffff;
+  --color-invisible: #ffffffcc;
+  --color-success: #21c45d;
+  --color-unsuccess: #dc2828;
+  --color-accent: #af57db;
+  --color-muted: #676f7e;
+
+  --bg-purple: linear-gradient(135deg, hsl(221 83% 53%), hsl(280 65% 60%));
+  --bg-success: #21c45d33;
+  --bg-unsuccess: #dc28281a;
+  --bg-accent: #af57db1a;
+  --bg-dark: #000000cc;
+
+  --btn-create: #2463eb;
+  --btn-create-hover: #2463ebe6;
+
+  --border-color: #e2e4e9;
+}
