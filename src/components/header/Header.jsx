@@ -1,10 +1,20 @@
 import { TrendingUp, TrendingDown, Plus  } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/slices/toggleSlice';
+import { selectTotals, selectMonthOverMonth } from '../../store/slices/addTransaction/addTransactionSlice';
 
 function Header() {
 
     const isActive = useSelector(state => state.toggle.isActive)
+    const { balance } = useSelector(selectTotals)
+    const { percent } = useSelector(selectMonthOverMonth)
+
+    const isNegativeBalance = balance < 0
+    const formattedBalance = `${isNegativeBalance ? '-' : ''}$${Math.abs(balance).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`
+    const isUp = percent >= 0
+    const badgeBgClass = isUp ? 'bg-[var(--bg-success)]' : 'bg-[var(--bg-unsuccess)]'
+    const changeText = isNegativeBalance ? 'Баланс ушёл в минус — пора пересмотреть траты' : 'Отличная работа! Изменение месяц к месяцу'
+    const percentText = `${isUp ? '+' : ''}${Math.abs(percent).toFixed(1)}%`
 
     const dispatch = useDispatch();
 
@@ -35,12 +45,12 @@ function Header() {
             <div className="rounded-xl bg-[image:var(--bg-purple)] p-8 flex justify-between">
                 <div className='flex flex-col gap-4'>
                     <span className="text-[var(--color-invisible)] font-bold">Total Balance</span>
-                    <span className="text-[var(--color-secondary)] font-bold text-6xl">$2,320.00</span>
-                    <span className="text-[var(--color-invisible)]">Great job! Month over month change</span>
+                    <span className="text-[var(--color-secondary)] font-bold text-6xl">{formattedBalance}</span>
+                    <span className="text-[var(--color-invisible)]">{changeText}</span>
                 </div>
-                <div className="rounded-4xl text-[var(--color-secondary)] text-[0.9rem] font-bold bg-[var(--bg-success)] flex gap-0.5 h-fit px-3 py-2 items-center">
-                    <span><TrendingUp size={'1rem'}></TrendingUp></span>
-                    <span>+58.0%</span>              
+                <div className={`rounded-4xl text-[var(--color-secondary)] text-[0.9rem] font-bold ${badgeBgClass} flex gap-0.5 h-fit px-3 py-2 items-center`}>
+                    <span>{isUp ? <TrendingUp size={'1rem'}/> : <TrendingDown size={'1rem'}/>}</span>
+                    <span>{percentText}</span>
                 </div>
             </div>
         </div>
