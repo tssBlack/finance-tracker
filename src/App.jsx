@@ -1,5 +1,5 @@
 import './App.css'
-import Header from './components/header/header'
+import Header from './components/header/Header'
 import Body from './components/body/Body'
 import CreateTransaction from './components/menu/CreateTransaction'
 function App() {

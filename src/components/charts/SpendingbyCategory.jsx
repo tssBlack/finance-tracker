@@ -1,25 +1,24 @@
-import { PieChart, Pie, Cell } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { useSelector } from 'react-redux';
+import { selectSpendingByCategoryData } from '../../store/slices/addTransaction/addTransactionSlice';
 
-const data = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-];
-
-const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const colors = ['#2463eb', '#00C49F', '#FFBB28', '#FF8042', '#af57db', '#21c45d', '#dc2828'];
 
 function SpendingByCategory() {
+    const data = useSelector(selectSpendingByCategoryData);
     return (
-        <PieChart width={500} height={250}>
-        <Pie data={data} cx="50%" cy="50%" outerRadius={80} label>
-            {
-            data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={colors[index]}/>
-            ))
-            }
-        </Pie>
-        </PieChart>
+        <div className="bg-secondary border border-[var(--border-color)] rounded-xl p-4">
+            <h4 className="text-[var(--color-primary)] font-semibold mb-4">Spending by Category</h4>
+            <PieChart width={500} height={250}>
+                <Pie data={data} cx="50%" cy="50%" outerRadius={80} dataKey="value" nameKey="name" label>
+                    {data.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                    ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+            </PieChart>
+        </div>
     )
 }
 
