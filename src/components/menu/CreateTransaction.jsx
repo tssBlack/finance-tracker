@@ -1,8 +1,15 @@
 import { X, Home, ShoppingCart, Car, Utensils, Film, Heart, BookOpen, Zap, MoreHorizontal } from 'lucide-react';
 import { InputLabel, MenuItem, Select, FormControl, TextField } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/slices/toggleSlice';
 import { useState } from 'react';
+
+dayjs.extend(advancedFormat);
 
 function CreateTransaction() {
     const transactionType = ['Income', 'Expense'];
@@ -25,13 +32,16 @@ function CreateTransaction() {
         dispatch(toggle());
     }
 
-    const [type, setType] = useState('');
+    const [type, setType] = useState('Expense');
 
     const handleChangeType = (event) => {
-        SetType(event.target.value);
+        setType(event.target.value);
     };
 
     const [category, setCategory] = useState('');
+    const [amount, setAmount] = useState('');
+    const [description, setDescription] = useState('');
+    const [date, setDate] = useState(dayjs());
 
     const handleChangeCategory = (event) => {
         setCategory(event.target.value);
@@ -91,7 +101,15 @@ function CreateTransaction() {
                             }
                             </Select>            
                     </FormControl>
-                    <TextField label="Amount" variant="outlined" />
+                    <TextField 
+                        label="Amount" 
+                        variant="outlined" 
+                        type="number"
+                        placeholder="0.00"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        inputProps={{ step: '0.01', min: '0' }}
+                    />
                     <FormControl fullWidth>
                         <InputLabel id="category-label">Category</InputLabel>
                         <Select
@@ -137,7 +155,28 @@ function CreateTransaction() {
                             }
                         </Select>            
                     </FormControl>
-
+                    <TextField 
+                        label="Description" 
+                        placeholder="Enter transaction details..." 
+                        multiline 
+                        minRows={3}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker 
+                            label="Date"
+                            value={date}
+                            onChange={(newValue) => setDate(newValue)}
+                            format="MMMM Do, YYYY"
+                            slotProps={{ textField: { fullWidth: true } }}
+                        />
+                    </LocalizationProvider>
+                    <button
+                        className="bg-[var(--btn-create)] hover:bg-[var(--btn-create-hover)] transition-colors text-[var(--color-secondary)] font-semibold py-3 rounded-lg"
+                    >
+                        Add Transaction
+                    </button>
                 </div>
             </div>
         </div>
