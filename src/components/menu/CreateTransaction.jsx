@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggle } from '../../store/slices/toggleSlice';
+import { addTransaction } from '../../store/slices/addTransaction/addTransactionSlice';
 import { useState } from 'react';
 
 dayjs.extend(advancedFormat);
@@ -46,6 +47,23 @@ function CreateTransaction() {
     const handleChangeCategory = (event) => {
         setCategory(event.target.value);
     };
+
+    const handleSubmit = () => {
+        if (!amount || !category) return;
+        dispatch(addTransaction({
+            type,
+            amount,
+            category,
+            description,
+            date
+        }));
+        // reset and close
+        setAmount('');
+        setCategory('');
+        setDescription('');
+        setDate(dayjs());
+        if (isActive) dispatch(toggle());
+    }
 
     return (
         <div className={`bg-[var(--bg-dark)] fixed z-10 right-full w-full flex justify-end top-0
@@ -174,6 +192,7 @@ function CreateTransaction() {
                     </LocalizationProvider>
                     <button
                         className="bg-[var(--btn-create)] hover:bg-[var(--btn-create-hover)] transition-colors text-[var(--color-secondary)] font-semibold py-3 rounded-lg"
+                        onClick={handleSubmit}
                     >
                         Add Transaction
                     </button>
