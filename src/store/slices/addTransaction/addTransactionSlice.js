@@ -53,6 +53,23 @@ const initialTransactions = [
     description: "Movies & Dining",
     dateISO: dayjs("2025-01-18").toISOString(),
   },
+  // Добавляем транзакции за предыдущий месяц для тестирования
+  {
+    id: nanoid(),
+    type: "Income",
+    amount: 3000,
+    category: "Salary",
+    description: "Monthly Salary",
+    dateISO: dayjs("2024-12-15").toISOString(),
+  },
+  {
+    id: nanoid(),
+    type: "Expense",
+    amount: 1100,
+    category: "Rent",
+    description: "Monthly apartment rent",
+    dateISO: dayjs("2024-12-01").toISOString(),
+  },
 ];
 
 const transactionsSlice = createSlice({
@@ -133,15 +150,26 @@ export const selectMonthOverMonth = (state) => {
   const previousBalance = getMonthBalance(previousMonth);
 
   const delta = currentBalance - previousBalance;
-  const percent = previousBalance === 0
-    ? 0
-    : (delta / Math.abs(previousBalance)) * 100;
+  
+  // Calculate percentage change - корректный расчет процента
+  let percent = 0;
+  if (previousBalance !== 0) {
+    percent = (delta / Math.abs(previousBalance)) * 100;
+  } else if (currentBalance !== 0) {
+    // Если предыдущий месяц был 0, а текущий не 0 - это бесконечный рост
+    percent = currentBalance > 0 ? 100 : -100;
+  }
+
+  // Определяем, улучшилась ли финансовая ситуация
+  // Good Job если: баланс текущего месяца БОЛЬШЕ баланса предыдущего месяца
+  const isImprovement = currentBalance > previousBalance;
 
   return {
     currentBalance,
     previousBalance,
     delta,
     percent,
+    isImprovement,
   };
 };
 

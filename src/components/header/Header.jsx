@@ -7,20 +7,19 @@ function Header() {
 
     const isActive = useSelector(state => state.toggle.isActive)
     const { balance } = useSelector(selectTotals)
-    const { percent } = useSelector(selectMonthOverMonth)
+    const { percent, isImprovement } = useSelector(selectMonthOverMonth)
 
     const isNegativeBalance = balance < 0
     const formattedBalance = `${isNegativeBalance ? '-' : ''}$${Math.abs(balance).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`
-    const isUp = percent >= 0
+    const isUp = isImprovement 
     const badgeBgClass = isUp ? 'bg-[var(--bg-success)]' : 'bg-[var(--bg-unsuccess)]'
-    const changeText = isUp ? 'Sad story :(' : 'Good Job!'
-    const percentText = `${isUp ? '+' : ''}${Math.abs(percent).toFixed(1)}%`
+    const changeText = isUp ? 'Good Job!' : 'Sad story :(' // Исправлен порядок
+    const percentText = `${percent >= 0 ? '+' : ''}${Math.abs(percent).toFixed(1)}%`
     const dispatch = useDispatch();
 
     const handeToggle = () => {
         dispatch(toggle());
     }
-
 
     return (
         <div className="flex flex-col gap-8">
